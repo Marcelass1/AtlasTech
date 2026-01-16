@@ -1,9 +1,12 @@
 # Infrastructure Design - AtlasTech Solutions
 
 ## 1. Project Overview & Role Clarification
-**Who Does What?**
-*   **AI (Me):** I act as the **System Architect & DevOps Engineer**. I define the architecture, write the configuration scripts (Bash), create the design documents, and provide step-by-step guides.
-*   **User (You):** You act as the **Data Center Operator**. You are responsible for creating the Virtual Machines in your hypervisor (VirtualBox/VMware), configuring the network adapters, and running the scripts I provide inside the VMs.
+## 1. Project Overview & Team Roles
+**Team Members: Ismail & Yassin**
+
+We act as the **System Architects & DevOps Engineers** for AtlasTech Solutions.
+*   **Responsibilities:** Architecture definition, infrastructure implementation, security configuration, and documentation.
+*   **Goal:** upgrade the company's infrastructure to meet security standards (ISO 2700X) and deploy the required web applications.
 
 ## 2. Target Network Topology (VM Environment)
 We will simulate a segmented network using **Internal Networks** in your Hypervisor.
