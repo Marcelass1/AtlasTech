@@ -2,39 +2,101 @@
 **Authors:** Ismail & Yassin
 
 ## 1. Introduction
-This document outlines the potential security risks associated with the implemented infrastructure for AtlasTech Solutions. It highlights vulnerabilities introduced by specific configuration choices (e.g., Bridged Networking, Self-Signed Certificates) and proposes mitigation strategies.
+This document outlines the security risks associated with the implemented infrastructure for AtlasTech Solutions. It highlights vulnerabilities introduced by configuration choices (e.g., Bridged Networking, Self-Signed Certificates) and provides visual schemas and structured tables for analysis.
 
-## 2. Identified Risks
+## 2. Risk Overview (Matrix)
 
-### 2.1 Network Exposure (Bridged Mode)
-*   **Risk Description:** Using **Bridged Networking** places the Virtual Machines (VMs) on the same Layer 2 network as the host machine and other devices on the local LAN (e.g., smartphones, IoT devices).
-*   **Impact:** If a device on the local network is compromised, an attacker could directly attack the Main Server or Backup Server without passing through a perimeter firewall.
-*   **Mitigation (Implemented):** 
-    *   **UFW Firewall:** Configured on the servers to block incoming traffic on non-essential ports.
-    *   **Fail2Ban:** Protects against brute-force attacks on SSH.
-*   **Ideal Mitigation (Production):** Use a dedicated **DMZ VLAN** isolated from the internal LAN by a physical router/firewall.
+| ID | Risk Category | Vulnerability | Likelihood | Impact | Severity | Implemented Mitigation |
+| :--- | :--- | :--- | :---: | :---: | :---: | :--- |
+| **R1** | Network | Bridged Mode Exposure | High | High | **High** | UFW Firewall, Fail2Ban |
+| **R2** | Transport | Self-Signed SSL | High | Medium | **High** | Accepted for Lab Use |
+| **R3** | Database | Lateral Movement (Backup VM) | Medium | High | **Medium** | Source IP Restriction (3306) |
+| **R4** | Availability | Single Host Compromise | Low | Critical | **Medium** | Off-site Backups (Manual) |
+| **R5** | Code Security | Hardcoded Credentials | Medium | High | **High** | Restricted File Permissions |
 
-### 2.2 Transport Security (Self-Signed Certificates)
-*   **Risk Description:** The web server uses **Self-Signed SSL Certificates** generated via `openssl`.
-*   **Impact:** 
-    *   Users receive browser security warnings ("Your connection is not private"), leading to "Certificate Warning Fatigue".
-    *   No guarantee of server identity (Man-in-the-Middle attacks are possible if the user ignores warnings without verifying fingerprints).
-*   **Mitigation:** Acceptable for internal/lab testing.
-*   **Ideal Mitigation (Production):** Purchase a certificate from a trusted CA or use Let's Encrypt for a public domain.
+### Risk Heatmap
+```mermaid
+XYChart-beta
+    title "Risk Severity Assessment"
+    x-axis [Low, Medium, High]
+    y-axis "Impact" 0 --> 10
+    bar [2, 6, 9]
+```
 
-### 2.3 Database Connectivity
-*   **Risk Description:** The database allows connections from the Backup Server for replication.
-*   **Impact:** If the Backup Server is compromised, it could be used as a pivot point to attack the Main Database.
-*   **Mitigation (Implemented):** Firewall rules restrict 3306 access specifically to the Backup Server's IP (or subnet in Bridged mode).
+## 3. Detailed Analysis & Schemas
 
-### 2.4 Backup Integrity
-*   **Risk Description:** Backups are stored on a secondary VM (`SRV-BACKUP`).
-*   **Impact:** 
-    *   If the underlying physical host (your PC) fails, **both** Main and Backup VMs are lost.
-    *   Ransomware on the host could encrypt both VM disk files.
-*   **Mitigation:** Regularly copy backup files (`.sql`) from the VM to external cloud storage (e.g., AWS S3, Google Drive).
+### 3.1 Network Exposure (Bridged Mode) - R1
+**Description:** Using Bridged Networking places VMs on the same physical usage network as unsecured IoT devices or personal phones.
 
-### 2.5 Hardcoded Credentials
-*   **Risk Description:** Database passwords and API keys are hardcoded in the deployment scripts (`setup_main_server.sh`) and PHP config (`db.php`).
-*   **Impact:** Anyone with read access to the codebase knows the production passwords.
-*   **Ideal Mitigation:** Use Environment Variables (`.env` files) or a Secret Management tool (HashiCorp Vault) to inject credentials at runtime.
+**Attack Vector Schema:**
+```mermaid
+graph TD
+    subgraph "Home/Office LAN (192.168.1.x)"
+        A[Attacker / Malware] -->|Lateral Move| B[Your Laptop]
+        A -->|Direct Access| C[Smart TV / IoT]
+        
+        subgraph "AtlasTech Infrastructure (Bridged)"
+            A -.->|Port Scan| D[Main Server]
+            A -.->|SSH Brute Force| E[Backup Server]
+        end
+    end
+    
+    style A fill:#ffcccc,stroke:#ff0000
+    style D fill:#ddffdd,stroke:#00aa00
+    style E fill:#ddffdd,stroke:#00aa00
+```
+**Mitigation:** `hardening.sh` configures UFW to block all ports except 80/443 and restricts SSH attempts.
+
+---
+
+### 3.2 Transport Security (Man-in-the-Middle) - R2
+**Description:** Self-signed certificates allow traffic encryption but verify no identity.
+
+**Trust Flow Issue:**
+```mermaid
+sequenceDiagram
+    participant User
+    participant Attacker
+    participant Server
+    
+    User->>Attacker: Hello Client (Intercepted)
+    Attacker->>Server: Hello Client
+    Server->>Attacker: Server Cert (Self-Signed)
+    Attacker->>User: Attacker Cert (Fake Self-Signed)
+    Note right of User: Browser warns "Unknown Issuer"
+    User->>Attacker: User accepts warning & sends Password
+    Attacker->>Server: Forward Requests
+    Note right of Attacker: Decrypts & Steals Data
+```
+**Mitigation:** This is a known acceptance for the lab environment. In production, use **Let's Encrypt**.
+
+---
+
+### 3.3 Database Integrity & Backup - R3 & R4
+**Description:** If the Backup Server is infected, it could try to write malicious data to the Master DB.
+
+**Replication Flow:**
+```mermaid
+flowchart LR
+    A[Main DB (Master)]
+    B[Backup DB (Slave)]
+    C[Attacker on Backup VM]
+
+    A -->|Replication Data| B
+    C -.->|SQL Injection / Poisoning| A
+    C -.->|Delete Backups| B
+
+    style A fill:#ccffcc
+    style B fill:#ffffcc
+    style C fill:#ffcccc
+```
+**Mitigation:** Database user for replication should have **READ-ONLY** permission on the Master (except for replication logs), minimizing the risk of upstream infection.
+
+## 4. Conclusion
+While the current infrastructure is functional for the project requirements, moving to production would require:
+1.  **VLAN/DMZ Segmentation** (Network Layer).
+2.  **Trusted CA Certificates** (Transport Layer).
+3.  **Secrets Management** (Application Layer).
+
+---
+*Generated by AtlasTech Security Team (Ismail & Yassin)*
