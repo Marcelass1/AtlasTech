@@ -13,10 +13,11 @@ Implement the secure infrastructure for "AtlasTech Solutions" using **Virtual Ma
 ## Proposed Changes
 
 ### Documentation & Design
+### Documentation & Design
 #### [NEW] [infrastructure_design.md](file:///C:/Users/dell/.gemini/antigravity/brain/a017d6e3-1fd0-4ac3-90ca-9a9e8b8a27c9/infrastructure_design.md)
-- **Topology**: Diagram showing Main Server, Backup Server, and Clients (Simulated VLANs).
-- **IP Plan**: Static IP assignments for the VMs.
-- **Security Policy**: Detailed UFW firewall rules.
+- **Topology**: Diagram showing Main Server, Backup Server, and Clients (Bridged Network).
+- **IP Plan**: Dynamic IP assignments (DHCP via Router) for simplicity.
+- **Security Policy**: Detailed UFW firewall rules adapted for dynamic IPs.
 
 ### VM Configuration Scripts
 #### [NEW] [scripts/main_server_setup.sh](file:///C:/Users/dell/.gemini/antigravity/brain/a017d6e3-1fd0-4ac3-90ca-9a9e8b8a27c9/scripts/main_server_setup.sh)
