@@ -1,4 +1,4 @@
-# User Guide: Setting Up AtlasTech Infrastructure
+# User Guide: Setting Up AtlasTech Infrastructure (Bridged)
 **Authors:** Ismail & Yassin
 
 ## 1. Prerequisites
@@ -9,26 +9,17 @@ Create 2 VMs with **Ubuntu Server** (20.04 or 22.04).
 
 ### VM 1: Main Server (SRV-MAIN)
 *   **RAM:** 2048 MB
-*   **Network Adapter 1:** NAT (For Internet access)
-*   **Network Adapter 2:** Internal Network (Name: `intnet_lan`) -> Set IP manually to `192.168.50.10` inside the VM later.
+*   **Network Adapter:** **Bridged Adapter** (Select your main WiFi/Ethernet card)
 
 ### VM 2: Backup Server (SRV-BACKUP)
 *   **RAM:** 1024 MB
-*   **Network Adapter 1:** NAT
-*   **Network Adapter 2:** Internal Network (Name: `intnet_lan`) -> Set IP manually to `192.168.50.20` later.
+*   **Network Adapter:** **Bridged Adapter** (Select your main WiFi/Ethernet card)
 
-## 3. Step 2: Configure IP Addresses
-On **both servers**, edit Netplan configuration to set static IPs.
-`sudo nano /etc/netplan/00-installer-config.yaml`
-Example for **Main Server**:
-```yaml
-network:
-  version: 2
-  ethernets:
-    enp0s8: # Check your interface name with 'ip a'
-      addresses: [192.168.50.10/24]
-```
-Run `sudo netplan apply`.
+## 3. Step 2: Check IP Addresses (Important!)
+Since you are using **Bridged Mode**, your router assigns the IPs.
+1.  Start the **Main Server**.
+2.  Login and run: `ip a`
+3.  **Write down the IP address** (e.g., `192.168.1.45`). You will need this to access the website.
 
 ## 4. Step 3: Run Configuration Scripts
 I have pushed all scripts to GitHub. On each server, clone the repo and run the scripts.
@@ -41,8 +32,8 @@ cd AtlasTech/scripts
 chmod +x *.sh
 ./setup_main_server.sh
 ./user_management.sh
-./hardening.sh
 ```
+*Note: Run `hardening.sh` ONLY if you know your local subnet range.*
 
 ### On Backup Server:
 ```bash
@@ -54,6 +45,6 @@ chmod +x *.sh
 ```
 
 ## 5. Verification
-*   Open a browser on your Client VM (connected to `intnet_lan`).
-*   Go to `http://192.168.50.10/commercial` -> Should work.
-*   Go to `http://192.168.50.10/rh` -> Should work (simulating internal access).
+*   Open a browser on your Windows PC (or Client VM).
+*   Go to `http://<YOUR-SERVER-IP>/commercial`.
+*   Example: `http://192.168.1.45/commercial`
