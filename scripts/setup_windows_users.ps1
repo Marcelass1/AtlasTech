@@ -1,81 +1,77 @@
 # ==========================================
 # AtlasTech Solutions - Windows Local User Setup
-# Creates 1 Representative User per Department on Windows
+# Creates Representative Users using 'net user'
 # RUN AS ADMINISTRATOR
 # ==========================================
 
-$ErrorActionPreference = "SilentlyContinue"
-
-Write-Host "Starting Windows User & Group Setup..." -ForegroundColor Cyan
-
-# Function to Create Group
-function New-LocalGroupSafe ($Name, $Description) {
-    if (-not (Get-LocalGroup -Name $Name)) {
-        New-LocalGroup -Name $Name -Description $Description | Out-Null
-        Write-Host "[OK] Created Group: $Name" -ForegroundColor Green
-    }
-    else {
-        Write-Host "[SKIP] Group $Name already exists" -ForegroundColor Yellow
-    }
+# 1. Check Administrator Privileges
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "ERROR: You must run this script as Administrator!" -ForegroundColor Red
+    Write-Host "Right-click the script and select 'Run with PowerShell', then accept the Admin prompt." -ForegroundColor Yellow
+    Read-Host "Press Enter to exit..."
+    Exit
 }
 
-# Function to Create User
-function New-LocalUserSafe ($Username, $Group, $Password) {
-    $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
+Write-Host "Starting Windows User Setup..." -ForegroundColor Cyan
+
+# Function to run net user command
+function Create-User-Net ($Username, $Group, $Password) {
+    # Check if user exists
+    $userCheck = Get-LocalUser -Name $Username -ErrorAction SilentlyContinue
+    if ($userCheck) {
+        Write-Host "User $Username already exists." -ForegroundColor Yellow
+    }
+    else {
+        # Create User using net user
+        Write-Host "Creating $Username..." -ForegroundColor Gray
+        $proc = Start-Process "net" -ArgumentList "user $Username $Password /add /passwordchg:no /expires:never" -NoNewWindow -PassThru -Wait
+        if ($proc.ExitCode -eq 0) {
+            Write-Host "[OK] Created User: $Username" -ForegroundColor Green
+        }
+        else {
+            Write-Host "[FAIL] Failed to create $Username" -ForegroundColor Red
+        }
+    }
+
+    # Add to Group (Create group if missing)
+    $groupCheck = Get-LocalGroup -Name $Group -ErrorAction SilentlyContinue
+    if (-not $groupCheck) {
+        Start-Process "net" -ArgumentList "localgroup $Group /add" -NoNewWindow -Wait
+        Write-Host "[OK] Created Group: $Group" -ForegroundColor Green
+    }
     
-    # 1. Create User
-    if (-not (Get-LocalUser -Name $Username)) {
-        New-LocalUser -Name $Username -Password $SecurePassword -FullName "$Username ($Group)" -PasswordNeverExpires | Out-Null
-        Write-Host "[OK] Created User: $Username" -ForegroundColor Green
-    }
-    else {
-        Write-Host "[SKIP] User $Username already exists" -ForegroundColor Yellow
-    }
-
-    # 2. Add to Group
-    try {
-        Add-LocalGroupMember -Group $Group -Member $Username
-        Write-Host "     -> Added to Group: $Group" -ForegroundColor Gray
-    }
-    catch {
-        Write-Host "     [ERR] Failed to add to group $Group" -ForegroundColor Red
-    }
+    # Add Member
+    Start-Process "net" -ArgumentList "localgroup $Group $Username /add" -NoNewWindow -Wait
 }
 
-# --- 1. Create Groups ---
-Write-Host "`nCreating Groups..." -ForegroundColor Cyan
-New-LocalGroupSafe "grp_ceo" "Direction"
-New-LocalGroupSafe "grp_it" "Informatique"
-New-LocalGroupSafe "grp_dev" "Developpement"
-New-LocalGroupSafe "grp_rh" "Ressources Humaines"
-New-LocalGroupSafe "grp_finance" "Finance"
-New-LocalGroupSafe "grp_com" "Commercial"
-
-# --- 2. Create Users ---
-Write-Host "`nCreating Users (Default Password: Password123!)..." -ForegroundColor Cyan
-
+# --- Create Users ---
 # Direction
-New-LocalUserSafe "ceo_user" "grp_ceo" "Password123!"
+Create-User-Net "ceo_user" "grp_ceo" "Password123!"
 
 # IT
-New-LocalUserSafe "charlie_it" "grp_it" "Password123!"
-# Add IT to Administrators (Optional - mirrors Sudo)
-Add-LocalGroupMember -Group "Administrators" -Member "charlie_it"
-Write-Host "     -> Added charlie_it to Administrators" -ForegroundColor Magenta
+Create-User-Net "charlie_it" "grp_it" "Password123!"
+# Add IT to Admins
+Start-Process "net" -ArgumentList "localgroup Administrators charlie_it /add" -NoNewWindow -Wait
+Write-Host "[INFO] Added charlie_it to Administrators" -ForegroundColor Magenta
 
 # Dev
-New-LocalUserSafe "alice_dev" "grp_dev" "Password123!"
+Create-User-Net "alice_dev" "grp_dev" "Password123!"
 
 # RH
-New-LocalUserSafe "bob_rh" "grp_rh" "Password123!"
+Create-User-Net "bob_rh" "grp_rh" "Password123!"
 
 # Finance
-New-LocalUserSafe "finance_user1" "grp_finance" "Password123!"
+Create-User-Net "finance_user1" "grp_finance" "Password123!"
 
 # Commercial
-New-LocalUserSafe "com_user1" "grp_com" "Password123!"
+Create-User-Net "com_user1" "grp_com" "Password123!"
 
+# --- VERIFICATION ---
 Write-Host "`n==========================================" -ForegroundColor Cyan
-Write-Host "Setup Complete!" -ForegroundColor Cyan
-Write-Host "You can now log into Windows with these users."
-Write-Host "=========================================="
+Write-Host "VERIFICATION LIST:" -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor Cyan
+gwmi Win32_UserAccount -Filter "LocalAccount=True" | Select-Object Name, Description, Disabled | Format-Table -AutoSize
+
+Write-Host "`nSetup Complete!" -ForegroundColor Green
+Read-Host "Press Enter to close..."
