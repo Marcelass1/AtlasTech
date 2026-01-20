@@ -9,6 +9,7 @@
 - [x] Create `setup_main_server.sh` (Apache, PHP, DB Master, App Deployment) <!-- id: 3 -->
 - [x] Create `setup_backup_server.sh` (DB Slave/Backup, File Replication) <!-- id: 4 -->
 - [x] Create `setup_users_groups.sh` (Implement PDF Roles: IT, Dev, RH, etc.) <!-- id: 5 -->
+- [x] Create `setup_minimal_users.sh` (Subset of users for testing/backup envs) <!-- id: 5b -->
 - [x] Configure Firewall Rules (UFW) for DMZ/LAN isolation <!-- id: 6 -->
 - [x] Configure SSL/TLS (Self-signed or Let's Encrypt for localhost) <!-- id: 7 -->
 
