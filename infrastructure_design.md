@@ -32,5 +32,6 @@ We will allow access from the **Local Subnet** instead of a single IP.
 *   **DB (3306):** Allow from Local Network (for Backup Server).
 
 ### 3.2 User Access Control
-*   **Groups:** `grp_it`, `grp_dev`, `grp_rh`, `grp_finance`.
-*   **Permissions:** Strict directory permissions remain unchanged.
+*   **Groups:** `grp_ceo`, `grp_it`, `grp_dev`, `grp_rh`, `grp_finance`, `grp_com`.
+*   **Users:** 25 Total (1 CEO, 4 IT, 6 Dev, 3 RH, 3 Finance, 8 Com/Mkt).
+*   **Permissions:** Strict directory permissions applied (770 for Private, 775 for Public).
