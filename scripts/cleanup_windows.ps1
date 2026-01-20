@@ -21,11 +21,11 @@ if ($confirm -ne "yes") {
 # Includes names from my scripts AND your screenshots (e.g., it_admin)
 $UsersToDelete = @(
     "ceo_user",
-    "charlie_it", "it_admin", "dave_it",
+    "charlie_it", "it_admin", "it_admin_user",
     "alice_dev", "dev_user",
     "bob_rh", "rh_user",
-    "finance_user", "finance_user1",
-    "com_user", "com_user1"
+    "finance_user", "finance_user1", "compta_user",
+    "com_user", "com_user1", "commercial_user"
 )
 
 # --- 2. List of Groups to Delete ---
