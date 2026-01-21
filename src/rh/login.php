@@ -14,13 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // In a real app we would use password_verify($password, $row['password'])
         // For this demo we use direct comparison as seeded in init.sql
         if ($password === $row['password']) {
-            if ($row['department'] === 'RH') {
+            // Allow both RH and IT departments
+            if ($row['department'] === 'RH' || $row['department'] === 'IT') {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $row['username'];
+                $_SESSION['department'] = $row['department']; // Store dept for UI customization if needed
                 header("Location: index.php");
                 exit;
             } else {
-                $error = "Accès Refusé. Réservé au département RH.";
+                $error = "Accès Refusé. Réservé aux départements RH et IT.";
             }
         } else {
             $error = "Mot de passe incorrect.";

@@ -29,5 +29,5 @@ CREATE TABLE employees (
 
 INSERT INTO employees (username, password, first_name, last_name, email, position, department, salary) VALUES 
 ('jane_rh', 'rh123', 'Jane', 'Smith', 'jane@atlastech.com', 'HR Manager', 'RH', 5000.00),
-('john_it', 'it123', 'John', 'Doe', 'john@atlastech.com', 'Developer', 'IT', 4500.00),
+('charlie_it', 'it123', 'Charlie', 'Davis', 'charlie@atlastech.com', 'SysAdmin', 'IT', 4800.00),
 ('alice_fin', 'fin123', 'Alice', 'Johnson', 'alice@atlastech.com', 'Accountant', 'Finance', 4800.00);
