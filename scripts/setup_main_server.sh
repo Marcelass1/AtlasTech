@@ -14,6 +14,9 @@ else
     echo "<h1>Site Commercial (Public)</h1><p>Welcome to AtlasTech Commercial</p>" | sudo tee /var/www/html/commercial/index.html
 fi
 if [ -d "../src/rh" ]; then
+    # Remove placeholder if it exists so index.php takes precedence
+    sudo rm -f /var/www/html/rh/index.html
+    
     sudo cp -r "../src/rh/"* /var/www/html/rh/
     
     # Initialize DB (Simple check)
