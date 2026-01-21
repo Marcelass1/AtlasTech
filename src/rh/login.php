@@ -1,18 +1,32 @@
 <?php
 session_start();
-$VALID_USER = "admin";
-$VALID_PASS = "admin123";
-$error = "";
+include 'db.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $username = $conn->real_escape_string($_POST['username']);
     $password = $_POST['password'];
-    if ($username === $VALID_USER && $password === $VALID_PASS) {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        header("Location: index.php");
-        exit;
+
+    $sql = "SELECT * FROM employees WHERE username = '$username'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // In a real app we would use password_verify($password, $row['password'])
+        // For this demo we use direct comparison as seeded in init.sql
+        if ($password === $row['password']) {
+            if ($row['department'] === 'RH') {
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $row['username'];
+                header("Location: index.php");
+                exit;
+            } else {
+                $error = "Accès Refusé. Réservé au département RH.";
+            }
+        } else {
+            $error = "Mot de passe incorrect.";
+        }
     } else {
-        $error = "Accès Refusé. Identifiants invalides.";
+        $error = "Utilisateur inconnu.";
     }
 }
 ?>
