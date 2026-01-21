@@ -13,7 +13,16 @@ if [ -d "../src/commercial" ]; then
 else
     echo "<h1>Site Commercial (Public)</h1><p>Welcome to AtlasTech Commercial</p>" | sudo tee /var/www/html/commercial/index.html
 fi
-echo "<h1>Intranet RH (Private)</h1><p>Restricted Access - RH Dept Only</p>" | sudo tee /var/www/html/rh/index.html
+if [ -d "../src/rh" ]; then
+    sudo cp -r "../src/rh/"* /var/www/html/rh/
+    
+    # Initialize DB (Simple check)
+    if [ -f "../src/rh/init.sql" ]; then
+        sudo mysql -uroot -p'StrongRootPassword123!' < "../src/rh/init.sql"
+    fi
+else
+    echo "<h1>Intranet RH (Private)</h1><p>Restricted Access - RH Dept Only</p>" | sudo tee /var/www/html/rh/index.html
+fi
 cat <<EOF | sudo tee /etc/apache2/sites-available/atlas-commercial.conf
 <VirtualHost *:80>
     ServerAdmin admin@atlastech.com
