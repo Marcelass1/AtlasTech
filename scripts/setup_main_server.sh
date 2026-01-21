@@ -8,7 +8,11 @@ sudo mysql -e "DROP DATABASE IF EXISTS test"
 sudo mysql -e "FLUSH PRIVILEGES"
 sudo mkdir -p /var/www/html/commercial
 sudo mkdir -p /var/www/html/rh
-echo "<h1>Site Commercial (Public)</h1><p>Welcome to AtlasTech Commercial</p>" | sudo tee /var/www/html/commercial/index.html
+if [ -d "../src/commercial" ]; then
+    sudo cp -r ../src/commercial/* /var/www/html/commercial/
+else
+    echo "<h1>Site Commercial (Public)</h1><p>Welcome to AtlasTech Commercial</p>" | sudo tee /var/www/html/commercial/index.html
+fi
 echo "<h1>Intranet RH (Private)</h1><p>Restricted Access - RH Dept Only</p>" | sudo tee /var/www/html/rh/index.html
 cat <<EOF | sudo tee /etc/apache2/sites-available/atlas-commercial.conf
 <VirtualHost *:80>
