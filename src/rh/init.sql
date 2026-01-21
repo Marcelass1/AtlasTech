@@ -28,6 +28,6 @@ CREATE TABLE employees (
 -- Let's use simple plain text for the SQL seed to ensure it works 100% for the user.
 
 INSERT INTO employees (username, password, first_name, last_name, email, position, department, salary) VALUES 
-('jane_rh', 'rh123', 'Jane', 'Smith', 'jane@atlastech.com', 'HR Manager', 'RH', 5000.00),
+('bob_rh', 'rh123', 'Bob', 'Martin', 'bob@atlastech.com', 'HR Director', 'RH', 5500.00),
 ('charlie_it', 'it123', 'Charlie', 'Davis', 'charlie@atlastech.com', 'SysAdmin', 'IT', 4800.00),
 ('alice_fin', 'fin123', 'Alice', 'Johnson', 'alice@atlastech.com', 'Accountant', 'Finance', 4800.00);
