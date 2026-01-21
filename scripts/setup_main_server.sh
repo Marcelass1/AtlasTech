@@ -19,8 +19,18 @@ if [ -d "../src/rh" ]; then
     
     sudo cp -r "../src/rh/"* /var/www/html/rh/
     
-    # Initialize DB (Simple check)
+    # Set correct permissions
+    sudo chown -R www-data:www-data /var/www/html/rh
+    sudo chmod -R 755 /var/www/html/rh
+    
+    # Initialize DB and Create Dedicated User
     if [ -f "../src/rh/init.sql" ]; then
+        # Create rh_user/rh123 to avoid Root Auth socket issues
+        sudo mysql -e "CREATE USER IF NOT EXISTS 'rh_user'@'localhost' IDENTIFIED BY 'rh_app_password';"
+        sudo mysql -e "GRANT ALL PRIVILEGES ON rh_db.* TO 'rh_user'@'localhost';"
+        sudo mysql -e "FLUSH PRIVILEGES;"
+        
+        # Run init.sql as root
         sudo mysql -uroot -p'StrongRootPassword123!' < "../src/rh/init.sql"
     fi
 else
