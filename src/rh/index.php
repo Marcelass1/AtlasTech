@@ -1,4 +1,11 @@
-<?php include 'db.php'; ?>
+<?php
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+include 'db.php'; 
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -168,9 +175,12 @@
             <i class="fas fa-cog"></i> Settings
         </a>
         <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #F3F4F6;">
-            <div class="d-flex align-items-center gap-2">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=random" style="width: 32px; border-radius: 50%;">
-                <small style="font-weight: 600;">Admin RH</small>
+            <a href="logout.php" class="nav-item text-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="d-flex align-items-center gap-2 mt-3 ps-2">
+                <img src="https://ui-avatars.com/api/?name=<?php echo $_SESSION['username']; ?>&background=random" style="width: 32px; border-radius: 50%;">
+                <small style="font-weight: 600;"><?php echo htmlspecialchars($_SESSION['username']); ?></small>
             </div>
         </div>
     </div>

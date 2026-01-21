@@ -18,6 +18,13 @@ cat <<EOF | sudo tee /etc/apache2/sites-available/atlas-commercial.conf
 <VirtualHost *:80>
     ServerAdmin admin@atlastech.com
     DocumentRoot /var/www/html/commercial
+    
+    # Allow access to RH via subfolder for easier testing (http://ip/rh)
+    Alias /rh /var/www/html/rh
+    <Directory /var/www/html/rh>
+        Require all granted
+    </Directory>
+
     ErrorLog \${APACHE_LOG_DIR}/commercial_error.log
     CustomLog \${APACHE_LOG_DIR}/commercial_access.log combined
 </VirtualHost>
