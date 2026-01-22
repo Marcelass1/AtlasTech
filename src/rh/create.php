@@ -31,109 +31,97 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>AtlasHR | Nouveau Collaborateur</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-light: #eef2ff;
-            --secondary: #64748b;
-            --bg-body: #f8fafc;
-            --text-dark: #0f172a;
-            --border-color: #e2e8f0;
-        }
-
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            color: var(--text-dark);
+            color: #0f172a;
         }
 
         .card {
             background: white;
             padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
-            border: 1px solid var(--border-color);
+            max-width: 550px;
+            border: 1px solid #cbd5e1;
         }
 
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header h2 { margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
-        .header p { color: var(--secondary); margin-top: 5px; font-size: 0.95rem; }
+        .header { text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; }
+        .header h2 { margin: 0; font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+        .header p { color: #64748b; margin-top: 5px; font-size: 0.95rem; }
 
         .form-group { margin-bottom: 1.25rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #334155; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.02em; }
         
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
             font-size: 0.95rem;
             font-family: inherit;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            background: #f8fafc;
+            color: #1e293b;
         }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        input:focus, select:focus { outline: 2px solid #2563eb; border-color: #2563eb; background: white; }
 
         .btn-primary {
             width: 100%;
-            background: var(--primary);
+            background: #0f172a;
             color: white;
-            padding: 14px;
+            padding: 12px;
             border: none;
-            border-radius: 10px;
+            border-radius: 4px;
             font-weight: 600;
-            font-size: 1rem;
             cursor: pointer;
-            transition: transform 0.2s;
             margin-top: 1rem;
+            font-size: 1rem;
         }
-        .btn-primary:hover { transform: translateY(-1px); }
+        .btn-primary:hover { background: #1e293b; }
 
         .btn-back {
             display: block;
             text-align: center;
-            margin-top: 1.5rem;
-            color: var(--secondary);
+            margin-top: 1.2rem;
+            color: #64748b;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 0.9rem;
         }
-        .btn-back:hover { color: var(--text-dark); }
+        .btn-back:hover { color: #0f172a; text-decoration: underline; }
 
-        .row { display: flex; gap: 15px; }
+        .row { display: flex; gap: 20px; }
         .col { flex: 1; }
     </style>
 </head>
 <body>
     <div class="card">
         <div class="header">
-            <div style="width:50px; height:50px; background:var(--primary-light); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.2rem;">
-                <i class="fas fa-user-plus"></i>
-            </div>
             <h2>Nouveau Collaborateur</h2>
-            <p>Remplissez les informations ci-dessous</p>
+            <p>Saisissez les informations contractuelles</p>
         </div>
 
-        <?php if(isset($error)) echo "<div style='color:red; margin-bottom:1rem; text-align:center;'>$error</div>"; ?>
+        <?php if(isset($error)) echo "<div style='color:#ef4444; background:#fef2f2; padding:10px; border-radius:4px; margin-bottom:1rem; border:1px solid #fecaca; text-align:center;'>$error</div>"; ?>
 
         <form method="post">
             <div class="row">
                 <div class="col form-group">
                     <label>Prénom</label>
-                    <input type="text" name="first_name" required placeholder="Jean">
+                    <input type="text" name="first_name" required placeholder="Ex: Jean">
                 </div>
                 <div class="col form-group">
                     <label>Nom</label>
-                    <input type="text" name="last_name" required placeholder="Dupont">
+                    <input type="text" name="last_name" required placeholder="Ex: Dupont">
                 </div>
             </div>
 
@@ -143,29 +131,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group">
-                <label>Poste</label>
-                <input type="text" name="position" required placeholder="Développeur Fullstack">
+                <label>Poste Occupé</label>
+                <input type="text" name="position" required placeholder="Ex: Développeur Senior">
             </div>
 
             <div class="row">
                 <div class="col form-group">
                     <label>Département</label>
                     <select name="department">
-                        <option value="IT">IT</option>
-                        <option value="RH">RH</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
+                        <option value="IT">IT / Technique</option>
+                        <option value="RH">Ressources Humaines</option>
+                        <option value="Commercial">Commercial / Vente</option>
+                        <option value="Finance">Finance / Compta</option>
                     </select>
                 </div>
                 <div class="col form-group">
-                    <label>Salaire</label>
-                    <input type="number" step="0.01" name="salary" required placeholder="45000">
+                    <label>Salaire Mensuel (€)</label>
+                    <input type="number" step="0.01" name="salary" required placeholder="3500">
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary">Enregistrer</button>
-            <a href="index.php" class="btn-back">Annuler</a>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-save" style="margin-right:8px;"></i> Enregistrer le profil
+            </button>
+            <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
         </form>
     </div>
 </body>
