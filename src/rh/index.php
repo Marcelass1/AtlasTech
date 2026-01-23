@@ -41,6 +41,8 @@
             height: 100vh;
             padding: 2rem 1.5rem;
             z-index: 100;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .brand {
@@ -362,10 +364,13 @@
             Analytiques
         </a>
         <a href="#" class="nav-link">
-            <i class="fas fa-file-contract"></i>
-            Documents
+            <i class="fas fa-file-alt"></i>
+            Rapports
         </a>
-        <a href="#" class="nav-link" style="margin-top:auto;">
+        
+        <div style="flex: 1;"></div>
+        
+        <a href="#" class="nav-link">
             <i class="fas fa-sliders-h"></i>
             Paramètres
         </a>
@@ -387,12 +392,12 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <h1>Gestions des Ressources</h1>
-                <p class="subtitle">Supervisez votre équipe, analysez les performances et gérez les recrutements.</p>
+                <h1>Tableau de Bord</h1>
+                <p class="subtitle">Aperçu global de l'effectif et des départements.</p>
             </div>
             <div style="display:flex; gap:10px;">
                 <a href="create.php" class="btn-primary">
-                    <i class="fas fa-plus"></i> Nouveau
+                    <i class="fas fa-plus"></i> Nouveau Collaborateur
                 </a>
             </div>
         </div>
@@ -403,12 +408,12 @@
                 <div class="stat-value"><?php echo $total_emp; ?></div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Directions Actives</div>
+                <div class="stat-label">Départements</div>
                 <div class="stat-value"><?php echo $total_depts; ?></div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Dernier Recrutement</div>
-                <div class="stat-value" style="font-size: 1.8rem; margin-top:0.8rem;"><?php echo date("d M Y", strtotime($latest_hire)); ?></div>
+                <div class="stat-value" style="font-size: 1.8rem; margin-top:0.8rem;"><?php echo date("Y-m-d", strtotime($latest_hire)); ?></div>
             </div>
         </div>
 
