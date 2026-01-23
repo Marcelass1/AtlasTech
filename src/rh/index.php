@@ -436,37 +436,52 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        /* ... existing styles ... */
+        
+        .text-center { text-align: center; }
+        .text-end { text-align: right; }
 
-        /* Toast */
-        .toast {
-            visibility: hidden;
-            min-width: 280px;
-            background: #1e293b;
-            color: #fff;
+        /* Table Actions Alignment */
+        th.actions-col, td.actions-cell {
             text-align: center;
-            border-radius: 12px;
-            padding: 16px 20px;
-            position: fixed;
-            z-index: 1000;
-            right: 40px;
-            bottom: 40px;
-            font-size: 0.95rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            transform: translateY(100px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.4s;
+            width: 80px;
         }
-        .toast.show { visibility: visible; transform: translateY(0); }
-        .toast.success { border-left: 4px solid #10b981; }
-        .toast.danger { border-left: 4px solid #ef4444; }
 
-        .no-records td { text-align: center; padding: 4rem; color: var(--text-muted); font-style: italic; }
+        /* Improved Search Bar */
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: rgba(15, 23, 42, 0.5);
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-input:focus { 
+            border-color: #8b5cf6; 
+            background: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); 
+        }
 
+        /* Card Polish */
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card:hover { 
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -577,7 +592,7 @@
                         <th>Contact</th>
                         <th>Poste</th>
                         <th>Département</th>
-                        <th width="80" class="text-end">Actions</th>
+                        <th class="actions-col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -610,8 +625,8 @@
                                 <td style='color:var(--text-muted);'>" . htmlspecialchars($row["email"]) . "</td>
                                 <td>" . htmlspecialchars($row["position"]) . "</td>
                                 <td><span class='badge $badgeClass'>" . htmlspecialchars($row["department"]) . "</span></td>
-                                <td>
-                                    <a href='delete.php?id=" . $row["id"] . "' class='action-btn delete' onclick='return confirmDelete(event, this.href)' title='Supprimer'>
+                                <td class='actions-cell'>
+                                    <a href='delete.php?id=" . $row["id"] . "' class='action-btn delete' onclick='return confirmDelete(event, this.href)' title='Supprimer' style='margin:0 auto;'>
                                         <i class='fas fa-trash-alt'></i>
                                     </a>
                                 </td>
