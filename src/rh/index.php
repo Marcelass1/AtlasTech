@@ -478,15 +478,15 @@
             <i class="fas fa-layer-group" style="font-size: 1.4rem;"></i> AtlasHR
         </div>
 
-        <a href="#" class="nav-link active">
+        <a href="index.php" class="nav-link active">
             <i class="fas fa-users"></i>
             Collaborateurs
         </a>
-        <a href="#" class="nav-link">
+        <a href="analytics.php" class="nav-link">
             <i class="fas fa-chart-pie"></i>
             Analytiques
         </a>
-        <a href="#" class="nav-link">
+        <a href="reports.php" class="nav-link">
             <i class="fas fa-file-alt"></i>
             Rapports
         </a>
