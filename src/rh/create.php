@@ -14,14 +14,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $department = $conn->real_escape_string($_POST['department']);
     $salary = floatval($_POST['salary']);
 
-    $sql = "INSERT INTO employees (first_name, last_name, email, position, department, salary)
-            VALUES ('$first_name', '$last_name', '$email', '$position', '$department', '$salary')";
+    // Generate Username (firstname.lastname)
+    $username = strtolower($first_name . "." . $last_name);
+    // Ensure unique username (simple append if exists logic could be added here, but keeping it simple for now)
+    
+    // Default Password
+    $password = "password123"; // In production, hash this!
+
+    $sql = "INSERT INTO employees (username, password, first_name, last_name, email, position, department, salary)
+            VALUES ('$username', '$password', '$first_name', '$last_name', '$email', '$position', '$department', '$salary')";
 
     if ($conn->query($sql) === TRUE) {
         header("Location: index.php?msg=created");
         exit();
     } else {
-        $error = "Erreur: " . $conn->error;
+        $error = "Erreur SQL: " . $conn->error;
     }
 }
 ?>

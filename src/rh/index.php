@@ -38,7 +38,9 @@
             display: flex;
             flex-direction: column;
             position: fixed;
-            height: 100vh;
+            top: 0;
+            left: 0;
+            bottom: 0;
             padding: 2rem 1.5rem;
             z-index: 100;
             overflow-y: auto;
