@@ -38,76 +38,139 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>AtlasHR | Nouveau Collaborateur</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 20%),
+                radial-gradient(circle at 20% 90%, rgba(139, 92, 246, 0.08) 0%, transparent 20%);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            color: #0f172a;
+            color: var(--text-main);
         }
 
         .card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             width: 100%;
-            max-width: 550px;
-            border: 1px solid #cbd5e1;
+            max-width: 600px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
 
-        .header { text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; }
-        .header h2 { margin: 0; font-size: 1.5rem; font-weight: 700; color: #0f172a; }
-        .header p { color: #64748b; margin-top: 5px; font-size: 0.95rem; }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
 
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.02em; }
+        .header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 0; }
+        .header h2 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px;
+        }
+        .header p { color: var(--text-muted); margin-top: 8px; font-size: 1rem; font-weight: 300; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        label { 
+            display: block; 
+            margin-bottom: 0.6rem; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
         
         input, select {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             font-size: 0.95rem;
             font-family: inherit;
             box-sizing: border-box;
-            background: #f8fafc;
-            color: #1e293b;
+            background: rgba(15, 23, 42, 0.5);
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s;
         }
-        input:focus, select:focus { outline: 2px solid #2563eb; border-color: #2563eb; background: white; }
+        input:focus, select:focus { 
+            border-color: #6366f1; 
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); 
+        }
+
+        /* Custom Select Style workaround */
+        select option {
+            background: #1e293b;
+            color: #fff;
+            padding: 10px;
+        }
 
         .btn-primary {
             width: 100%;
-            background: #0f172a;
+            background: var(--primary-gradient);
             color: white;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             font-size: 1rem;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .btn-primary:hover { background: #1e293b; }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.4); 
+        }
 
         .btn-back {
             display: block;
             text-align: center;
-            margin-top: 1.2rem;
-            color: #64748b;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
+            transition: color 0.2s;
         }
-        .btn-back:hover { color: #0f172a; text-decoration: underline; }
+        .btn-back:hover { color: #fff; }
 
-        .row { display: flex; gap: 20px; }
+        .row { display: flex; gap: 24px; }
         .col { flex: 1; }
     </style>
 </head>
@@ -115,10 +178,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="card">
         <div class="header">
             <h2>Nouveau Collaborateur</h2>
-            <p>Saisissez les informations contractuelles</p>
+            <p>Saisissez les informations du profil.</p>
         </div>
 
-        <?php if(isset($error)) echo "<div style='color:#ef4444; background:#fef2f2; padding:10px; border-radius:4px; margin-bottom:1rem; border:1px solid #fecaca; text-align:center;'>$error</div>"; ?>
+        <?php if(isset($error)) echo "<div style='color:#f87171; background:rgba(239, 68, 68, 0.1); padding:12px; border-radius:10px; margin-bottom:1.5rem; border:1px solid rgba(239, 68, 68, 0.2); text-align:center;'>$error</div>"; ?>
 
         <form method="post">
             <div class="row">
@@ -159,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <button type="submit" class="btn-primary">
-                <i class="fas fa-save" style="margin-right:8px;"></i> Enregistrer le profil
+                <i class="fas fa-save"></i> Enregistrer le profil
             </button>
             <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
         </form>
