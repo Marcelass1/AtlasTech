@@ -1,3 +1,38 @@
+<?php
+    // Enable Error Reporting for Debugging
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    session_start();
+    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+        header("Location: login.php");
+        exit;
+    }
+    include 'db.php';
+
+    // Calculate Stats with Error Handling
+    $total_emp = 0;
+    $total_depts = 0;
+    $latest_hire = 'N/A';
+
+    // Total Employees
+    if ($res = $conn->query("SELECT count(*) as c FROM employees")) {
+        $total_emp = $res->fetch_assoc()['c'] ?? 0;
+    }
+
+    // Total Departments
+    if ($res = $conn->query("SELECT count(distinct department) as c FROM employees")) {
+        $total_depts = $res->fetch_assoc()['c'] ?? 0;
+    }
+
+    // Latest Hire
+    if ($res = $conn->query("SELECT hired_date FROM employees ORDER BY hired_date DESC LIMIT 1")) {
+        if ($row = $res->fetch_assoc()) {
+            $latest_hire = $row['hired_date'];
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -436,41 +471,7 @@
 </head>
 <body>
 
-    <?php
-    // Enable Error Reporting for Debugging
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
 
-    session_start();
-    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-        header("Location: login.php");
-        exit;
-    }
-    include 'db.php';
-
-    // Calculate Stats with Error Handling
-    $total_emp = 0;
-    $total_depts = 0;
-    $latest_hire = 'N/A';
-
-    // Total Employees
-    if ($res = $conn->query("SELECT count(*) as c FROM employees")) {
-        $total_emp = $res->fetch_assoc()['c'] ?? 0;
-    }
-
-    // Total Departments
-    if ($res = $conn->query("SELECT count(distinct department) as c FROM employees")) {
-        $total_depts = $res->fetch_assoc()['c'] ?? 0;
-    }
-
-    // Latest Hire
-    if ($res = $conn->query("SELECT hired_date FROM employees ORDER BY hired_date DESC LIMIT 1")) {
-        if ($row = $res->fetch_assoc()) {
-            $latest_hire = $row['hired_date'];
-        }
-    }
-    ?>
 
     <nav class="sidebar">
         <div class="brand">
