@@ -175,57 +175,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="header">
-            <h2>Nouveau Collaborateur</h2>
-            <p>Saisissez les informations du profil.</p>
+    <nav class="sidebar" style="width: 280px; background: rgba(15, 23, 42, 0.95); border-right: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; padding: 2rem 1.5rem; backdrop-filter: blur(10px); box-sizing: border-box; z-index:100;">
+        <div class="brand" style="margin-bottom: 3.5rem; font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display:flex; align-items:center; gap:12px;">
+            <i class="fas fa-layer-group"></i> AtlasHR
         </div>
 
-        <?php if(isset($error)) echo "<div style='color:#f87171; background:rgba(239, 68, 68, 0.1); padding:12px; border-radius:10px; margin-bottom:1.5rem; border:1px solid rgba(239, 68, 68, 0.2); text-align:center;'>$error</div>"; ?>
+        <a href="index.php" style="display: flex; align-items: center; gap: 16px; padding: 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; font-weight: 500; margin-bottom: 0.8rem; transition: all 0.3s ease;">
+            <i class="fas fa-users"></i> Collaborateurs
+        </a>
+        <a href="analytics.php" style="display: flex; align-items: center; gap: 16px; padding: 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; font-weight: 500; margin-bottom: 0.8rem; transition: all 0.3s ease;">
+            <i class="fas fa-chart-pie"></i> Analytiques
+        </a>
+        <a href="reports.php" style="display: flex; align-items: center; gap: 16px; padding: 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; font-weight: 500; margin-bottom: 0.8rem; transition: all 0.3s ease;">
+            <i class="fas fa-file-alt"></i> Rapports
+        </a>
 
-        <form method="post">
-            <div class="row">
-                <div class="col form-group">
-                    <label>Prénom</label>
-                    <input type="text" name="first_name" required placeholder="Ex: Jean">
+        <div style="flex: 1;"></div>
+        
+        <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                   <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
                 </div>
-                <div class="col form-group">
-                    <label>Nom</label>
-                    <input type="text" name="last_name" required placeholder="Ex: Dupont">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Email Professionnel</label>
-                <input type="email" name="email" required placeholder="jean.dupont@atlastech.com">
-            </div>
-
-            <div class="form-group">
-                <label>Poste Occupé</label>
-                <input type="text" name="position" required placeholder="Ex: Développeur Senior">
-            </div>
-
-            <div class="row">
-                <div class="col form-group">
-                    <label>Département</label>
-                    <select name="department">
-                        <option value="IT">IT / Technique</option>
-                        <option value="RH">Ressources Humaines</option>
-                        <option value="Commercial">Commercial / Vente</option>
-                        <option value="Finance">Finance / Compta</option>
-                    </select>
-                </div>
-                <div class="col form-group">
-                    <label>Salaire Mensuel (€)</label>
-                    <input type="number" step="0.01" name="salary" required placeholder="3500">
+                <div>
+                    <div style="font-weight: 600; font-size: 0.95rem; color: #f1f5f9;"><?php echo htmlspecialchars($_SESSION['username']); ?></div>
+                    <div style="font-size: 0.8rem; color: #94a3b8;">Admin</div>
                 </div>
             </div>
+            <a href="logout.php" style="width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.08); color: #94a3b8; text-decoration: none;"><i class="fas fa-power-off"></i></a>
+        </div>
+    </nav>
 
-            <button type="submit" class="btn-primary">
-                <i class="fas fa-save"></i> Enregistrer le profil
-            </button>
-            <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
-        </form>
+    <div style="margin-left: 280px; padding: 3rem 4rem; width: 100%; box-sizing: border-box; display:flex; justify-content:center; align-items:flex-start;">
+        <div class="card">
+            <div class="header">
+                <h2>Nouveau Collaborateur</h2>
+                <p>Saisissez les informations du profil.</p>
+            </div>
+
+            <?php if(isset($error)) echo "<div style='color:#f87171; background:rgba(239, 68, 68, 0.1); padding:12px; border-radius:10px; margin-bottom:1.5rem; border:1px solid rgba(239, 68, 68, 0.2); text-align:center;'>$error</div>"; ?>
+
+            <form method="post">
+                <div class="row">
+                    <div class="col form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="first_name" required placeholder="Ex: Jean">
+                    </div>
+                    <div class="col form-group">
+                        <label>Nom</label>
+                        <input type="text" name="last_name" required placeholder="Ex: Dupont">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Professionnel</label>
+                    <input type="email" name="email" required placeholder="jean.dupont@atlastech.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Poste Occupé</label>
+                    <input type="text" name="position" required placeholder="Ex: Développeur Senior">
+                </div>
+
+                <div class="row">
+                    <div class="col form-group">
+                        <label>Département</label>
+                        <select name="department">
+                            <option value="IT">IT / Technique</option>
+                            <option value="RH">Ressources Humaines</option>
+                            <option value="Commercial">Commercial / Vente</option>
+                            <option value="Finance">Finance / Compta</option>
+                        </select>
+                    </div>
+                    <div class="col form-group">
+                        <label>Salaire Mensuel (€)</label>
+                        <input type="number" step="0.01" name="salary" required placeholder="3500">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer le profil
+                </button>
+                <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
+            </form>
+        </div>
     </div>
 </body>
 </html>
