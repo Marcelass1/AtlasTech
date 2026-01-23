@@ -437,6 +437,11 @@
 <body>
 
     <?php
+    // Enable Error Reporting for Debugging
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     session_start();
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         header("Location: login.php");
@@ -444,10 +449,27 @@
     }
     include 'db.php';
 
-    // Calculate Stats
-    $total_emp = $conn->query("SELECT count(*) as c FROM employees")->fetch_assoc()['c'];
-    $total_depts = $conn->query("SELECT count(distinct department) as c FROM employees")->fetch_assoc()['c'];
-    $latest_hire = $conn->query("SELECT hired_date FROM employees ORDER BY hired_date DESC LIMIT 1")->fetch_assoc()['hired_date'] ?? 'N/A';
+    // Calculate Stats with Error Handling
+    $total_emp = 0;
+    $total_depts = 0;
+    $latest_hire = 'N/A';
+
+    // Total Employees
+    if ($res = $conn->query("SELECT count(*) as c FROM employees")) {
+        $total_emp = $res->fetch_assoc()['c'] ?? 0;
+    }
+
+    // Total Departments
+    if ($res = $conn->query("SELECT count(distinct department) as c FROM employees")) {
+        $total_depts = $res->fetch_assoc()['c'] ?? 0;
+    }
+
+    // Latest Hire
+    if ($res = $conn->query("SELECT hired_date FROM employees ORDER BY hired_date DESC LIMIT 1")) {
+        if ($row = $res->fetch_assoc()) {
+            $latest_hire = $row['hired_date'];
+        }
+    }
     ?>
 
     <nav class="sidebar">
