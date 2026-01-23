@@ -58,11 +58,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 20%),
                 radial-gradient(circle at 20% 90%, rgba(139, 92, 246, 0.08) 0%, transparent 20%);
             display: flex;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
             margin: 0;
             color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Main Content Logic */
+        .main-content {
+            margin-left: 280px; 
+            flex: 1; 
+            padding: 3rem 4rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .card {
@@ -206,59 +220,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </nav>
 
-    <div style="margin-left: 280px; padding: 3rem 4rem; width: 100%; box-sizing: border-box; display:flex; justify-content:center; align-items:flex-start;">
-        <div class="card">
-            <div class="header">
-                <h2>Nouveau Collaborateur</h2>
-                <p>Saisissez les informations du profil.</p>
+    <main class="main-content">
+        <div class="main-container">
+            <div class="card" style="margin: 0 auto;">
+                <div class="header">
+                    <h2>Nouveau Collaborateur</h2>
+                    <p>Saisissez les informations du profil.</p>
+                </div>
+
+                <?php if(isset($error)) echo "<div style='color:#f87171; background:rgba(239, 68, 68, 0.1); padding:12px; border-radius:10px; margin-bottom:1.5rem; border:1px solid rgba(239, 68, 68, 0.2); text-align:center;'>$error</div>"; ?>
+
+                <form method="post">
+                    <div class="row">
+                        <div class="col form-group">
+                            <label>Prénom</label>
+                            <input type="text" name="first_name" required placeholder="Ex: Jean">
+                        </div>
+                        <div class="col form-group">
+                            <label>Nom</label>
+                            <input type="text" name="last_name" required placeholder="Ex: Dupont">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Professionnel</label>
+                        <input type="email" name="email" required placeholder="jean.dupont@atlastech.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Poste Occupé</label>
+                        <input type="text" name="position" required placeholder="Ex: Développeur Senior">
+                    </div>
+
+                    <div class="row">
+                        <div class="col form-group">
+                            <label>Département</label>
+                            <select name="department">
+                                <option value="IT">IT / Technique</option>
+                                <option value="RH">Ressources Humaines</option>
+                                <option value="Commercial">Commercial / Vente</option>
+                                <option value="Finance">Finance / Compta</option>
+                            </select>
+                        </div>
+                        <div class="col form-group">
+                            <label>Salaire Mensuel (MAD)</label>
+                            <input type="number" step="0.01" name="salary" required placeholder="8000">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer le profil
+                    </button>
+                    <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
+                </form>
             </div>
-
-            <?php if(isset($error)) echo "<div style='color:#f87171; background:rgba(239, 68, 68, 0.1); padding:12px; border-radius:10px; margin-bottom:1.5rem; border:1px solid rgba(239, 68, 68, 0.2); text-align:center;'>$error</div>"; ?>
-
-            <form method="post">
-                <div class="row">
-                    <div class="col form-group">
-                        <label>Prénom</label>
-                        <input type="text" name="first_name" required placeholder="Ex: Jean">
-                    </div>
-                    <div class="col form-group">
-                        <label>Nom</label>
-                        <input type="text" name="last_name" required placeholder="Ex: Dupont">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Email Professionnel</label>
-                    <input type="email" name="email" required placeholder="jean.dupont@atlastech.com">
-                </div>
-
-                <div class="form-group">
-                    <label>Poste Occupé</label>
-                    <input type="text" name="position" required placeholder="Ex: Développeur Senior">
-                </div>
-
-                <div class="row">
-                    <div class="col form-group">
-                        <label>Département</label>
-                        <select name="department">
-                            <option value="IT">IT / Technique</option>
-                            <option value="RH">Ressources Humaines</option>
-                            <option value="Commercial">Commercial / Vente</option>
-                            <option value="Finance">Finance / Compta</option>
-                        </select>
-                    </div>
-                    <div class="col form-group">
-                        <label>Salaire Mensuel (€)</label>
-                        <input type="number" step="0.01" name="salary" required placeholder="3500">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-save"></i> Enregistrer le profil
-                </button>
-                <a href="index.php" class="btn-back">Annuler et retourner au tableau de bord</a>
-            </form>
         </div>
-    </div>
+    </main>
 </body>
 </html>

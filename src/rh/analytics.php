@@ -21,37 +21,39 @@ while($row = $dept_res->fetch_assoc()) {
     $dept_data[] = $row['count'];
 }
 
-// 2. Average Salary by Department
-$salary_data = [];
-$salary_labels = [];
-$salary_res = $conn->query("SELECT department, AVG(salary) as avg_sal FROM employees GROUP BY department");
-while($row = $salary_res->fetch_assoc()) {
-    $salary_labels[] = $row['department'];
-    $salary_data[] = round($row['avg_sal'], 2);
+// 2. Service Cost (Total Payroll by Department) - "Coût du Service"
+$cost_data = [];
+$cost_labels = [];
+$cost_res = $conn->query("SELECT department, SUM(salary) as total_cost FROM employees GROUP BY department");
+while($row = $cost_res->fetch_assoc()) {
+    $cost_labels[] = $row['department'];
+    $cost_data[] = round($row['total_cost'], 2);
 }
 
 // 3. Key Metrics
-$avg_salary_total = 0;
-$avg_res = $conn->query("SELECT AVG(salary) as avg_all FROM employees");
-if($r = $avg_res->fetch_assoc()) {
-    $avg_salary_total = round($r['avg_all'], 2);
+$total_payroll = 0;
+$payroll_res = $conn->query("SELECT SUM(salary) as total_all FROM employees");
+if($r = $payroll_res->fetch_assoc()) {
+    $total_payroll = round($r['total_all'], 2);
 }
 
 // Encode for JS
 $json_dept_labels = json_encode($dept_labels);
 $json_dept_data = json_encode($dept_data);
-$json_salary_labels = json_encode($salary_labels);
-$json_salary_data = json_encode($salary_data);
+$json_cost_labels = json_encode($cost_labels);
+$json_cost_data = json_encode($cost_data);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>AtlasHR | Analytiques</title>
+    <!-- ... (Keep existing Head content) ... -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ... (Keep existing CSS) ... */
         :root {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
@@ -77,7 +79,7 @@ $json_salary_data = json_encode($salary_data);
             overflow-x: hidden;
         }
 
-        /* Sidebar (Copied from index.php for consistency - effectively a partial) */
+        /* Sidebar styles (Copied from index.php) ... */
          .sidebar {
             width: var(--sidebar-width);
             background: rgba(15, 23, 42, 0.95);
@@ -191,8 +193,16 @@ $json_salary_data = json_encode($salary_data);
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
-            padding: 3rem 4rem;
-            max-width: 1600px;
+            padding: 3rem 4rem; /* Balanced Padding */
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header {
@@ -260,6 +270,7 @@ $json_salary_data = json_encode($salary_data);
 <body>
 
     <nav class="sidebar">
+        <!-- ... (Keep existing Sidebar) ... -->
         <div class="brand">
             <i class="fas fa-layer-group" style="font-size: 1.4rem;"></i> AtlasHR
         </div>
@@ -299,40 +310,32 @@ $json_salary_data = json_encode($salary_data);
     </nav>
 
     <main class="main-content">
-        <div class="header">
-            <h1>Analytiques & Statistiques</h1>
-            <p class="subtitle">Analyse en temps réel de votre capital humain.</p>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- Left Golumn: Main Charts -->
-            <div style="display:flex; flex-direction:column; gap:2rem;">
-                <div class="chart-card">
-                    <h3 class="card-title">Salaire Moyen par Département</h3>
-                    <canvas id="salaryChart" style="max-height: 300px;"></canvas>
-                </div>
-                
-                 <div class="chart-card">
-                    <h3 class="card-title">Évolution des Recrutements (Mock)</h3>
-                    <canvas id="timelineChart" style="max-height: 250px;"></canvas>
-                </div>
+        <div class="main-container">
+            <div class="header">
+                <h1>Analytiques & Coûts</h1>
+                <p class="subtitle">Analyse des coûts de services et effectifs (MAD).</p>
             </div>
 
-            <!-- Right Column: Distribution & Metrics -->
-            <div style="display:flex; flex-direction:column; gap:2rem;">
-                <div class="chart-card">
-                    <h3 class="card-title">Répartition par Département</h3>
-                    <canvas id="deptChart" style="max-height: 300px;"></canvas>
+            <div class="dashboard-grid">
+                <!-- Left Golumn: Main Charts -->
+                <div style="display:flex; flex-direction:column; gap:2rem;">
+                    <div class="chart-card">
+                        <h3 class="card-title">Coût Total par Service (MAD)</h3>
+                        <canvas id="costChart" style="max-height: 300px;"></canvas>
+                    </div>
                 </div>
 
-                <div class="metric-card">
-                    <div class="metric-label">Masse Salariale Moyenne</div>
-                    <div class="metric-val"><?php echo number_format($avg_salary_total, 2, ',', ' '); ?> €</div>
-                </div>
-                
-                 <div class="metric-card">
-                    <div class="metric-label">Taux de Rétention (Est.)</div>
-                    <div class="metric-val" style="color:#10b981;">98.5%</div>
+                <!-- Right Column: Distribution & Metrics -->
+                <div style="display:flex; flex-direction:column; gap:2rem;">
+                    <div class="chart-card">
+                        <h3 class="card-title">Répartition par Département</h3>
+                        <canvas id="deptChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Masse Salariale Mensuelle</div>
+                        <div class="metric-val"><?php echo number_format($total_payroll, 2, ',', ' '); ?> <span style="font-size:1.2rem; color:var(--text-muted);">MAD</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -367,15 +370,15 @@ $json_salary_data = json_encode($salary_data);
             }
         });
 
-        // 2. Salary Bar Chart
-        const ctxSalary = document.getElementById('salaryChart').getContext('2d');
-        new Chart(ctxSalary, {
+        // 2. Service Cost Bar Chart
+        const ctxCost = document.getElementById('costChart').getContext('2d');
+        new Chart(ctxCost, {
             type: 'bar',
             data: {
-                labels: <?php echo $json_salary_labels; ?>,
+                labels: <?php echo $json_cost_labels; ?>,
                 datasets: [{
-                    label: 'Salaire Moyen (€)',
-                    data: <?php echo $json_salary_data; ?>,
+                    label: 'Coût Total (MAD)',
+                    data: <?php echo $json_cost_data; ?>,
                     backgroundColor: '#8b5cf6',
                     borderRadius: 6
                 }]
@@ -387,32 +390,6 @@ $json_salary_data = json_encode($salary_data);
                 },
                 plugins: { legend: { display: false } },
                 responsive: true
-            }
-        });
-
-        // 3. Timeline (Mock Data)
-        const ctxTime = document.getElementById('timelineChart').getContext('2d');
-        new Chart(ctxTime, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
-                datasets: [{
-                    label: 'Nouveaux Recrutements',
-                    data: [1, 2, 0, 1, 3, 2],
-                    borderColor: '#06b6d4',
-                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                scales: {
-                    y: { display: false },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false } },
-                responsive: true,
-                maintainAspectRatio: false
             }
         });
     </script>

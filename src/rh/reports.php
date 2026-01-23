@@ -42,121 +42,22 @@ include 'db.php';
             overflow-x: hidden;
         }
 
-        /* Sidebar Partial */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: rgba(15, 23, 42, 0.95);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            padding: 2rem 1.5rem;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 3.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 500;
-            margin-bottom: 0.8rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-main);
-            transform: translateX(4px);
-        }
-
-        .nav-link.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: #8b5cf6;
-            font-weight: 600;
-        }
-        
-        .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 24px;
-            width: 3px;
-            background: var(--primary-gradient);
-            border-radius: 0 4px 4px 0;
-        }
-
-        .user-block {
-            margin-top: auto;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .user-avatar-sm {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: var(--primary-gradient);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
-        }
-        
-        .action-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .action-btn:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+        /* Sidebar styles matching index.php ... */
 
         /* Main Content */
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
             padding: 3rem 4rem;
-            max-width: 1600px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header {
@@ -283,23 +184,24 @@ include 'db.php';
     </nav>
 
     <main class="main-content">
-        <div class="header">
-            <h1>Centre de Rapports</h1>
-            <p class="subtitle">Générez et téléchargez des rapports officiels.</p>
-        </div>
-
-        <div class="reports-grid">
-            <!-- Report 1 -->
-            <div class="report-card">
-                <div class="report-icon"><i class="fas fa-table"></i></div>
-                <div>
-                    <h3 class="report-title">Liste des Employés</h3>
-                    <p class="report-desc">Export complet de tous les collaborateurs (Nom, Poste, Email, Département) au format CSV.</p>
-                </div>
-                <button onclick="exportCSV()" class="btn-download">
-                    <i class="fas fa-download"></i> Télécharger CSV
-                </button>
+        <div class="main-container">
+            <div class="header">
+                <h1>Centre de Rapports</h1>
+                <p class="subtitle">Générez et téléchargez des rapports officiels.</p>
             </div>
+
+            <div class="reports-grid">
+                <!-- Report 1 -->
+                <div class="report-card">
+                    <div class="report-icon"><i class="fas fa-table"></i></div>
+                    <div>
+                        <h3 class="report-title">Liste des Employés</h3>
+                        <p class="report-desc">Export complet de tous les collaborateurs (Nom, Poste, Email, Département) au format CSV.</p>
+                    </div>
+                    <button onclick="exportCSV()" class="btn-download">
+                        <i class="fas fa-download"></i> Télécharger CSV
+                    </button>
+                </div>
 
             <!-- Report 2 -->
             <div class="report-card">
@@ -354,6 +256,10 @@ include 'db.php';
                     </tbody>
                 </table>
             </div>
+        </div>
+                </table>
+            </div>
+        </div>
         </div>
     </main>
 
