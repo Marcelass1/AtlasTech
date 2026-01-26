@@ -10,6 +10,13 @@ cat <<EOF | sudo tee /etc/apache2/sites-available/atlas-ssl.conf
 <VirtualHost *:443>
     ServerName www.atlastech.com
     DocumentRoot /var/www/html/commercial
+    
+    # Allow access to RH via subfolder on default VHost (for IP access)
+    Alias /rh /var/www/html/rh
+    <Directory /var/www/html/rh>
+        Require all granted
+    </Directory>
+
     SSLEngine on
     SSLCertificateFile /etc/apache2/ssl/atlastech.crt
     SSLCertificateKeyFile /etc/apache2/ssl/atlastech.key
