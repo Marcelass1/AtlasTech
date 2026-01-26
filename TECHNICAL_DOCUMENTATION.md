@@ -93,6 +93,22 @@ $password = "rh_app_password"; // Changez ceci si vous avez défini un mot de pa
 $dbname = "rh_db";
 ```
 
+### Étape 5 : Sécurisation (Niveau Initial)
+Le projet inclut un script automatisé pour mettre en place les mesures de sécurité de base (HTTPS, Redirection, Certificat Auto-signé).
+
+Exécutez le script suivant :
+```bash
+cd scripts
+chmod +x setup_ssl.sh
+./setup_ssl.sh
+```
+*Ce script va :*
+1.  Générer un certificat TLS auto-signé (valide 365 jours).
+2.  Configurer Apache pour utiliser HTTPS (Port 443).
+3.  Forcer la redirection du trafic HTTP vers HTTPS.
+
+Pour la production, il est recommandé de remplacer le certificat auto-signé par un certificat **Let's Encrypt** (via Certbot).
+
 ---
 
 ## 4. Dépannage (Troubleshooting)
