@@ -33,10 +33,12 @@ cat <<EOF | sudo tee /etc/apache2/sites-available/atlas-commercial.conf
 <VirtualHost *:80>
     ServerAdmin admin@atlastech.com
     DocumentRoot /var/www/html/commercial
-    ServerName www.atlastech.com
+    
+    # Generic Redirection (Handles Domains AND IPs)
     RewriteEngine On
     RewriteCond %{HTTPS} off
-    RewriteRule ^/?(.*) https://%{SERVER_NAME}/\$1 [R=301,L]
+    RewriteRule ^/?(.*) https://%{HTTP_HOST}/\$1 [R=301,L]
+    
     ErrorLog \${APACHE_LOG_DIR}/commercial_error.log
     CustomLog \${APACHE_LOG_DIR}/commercial_access.log combined
 </VirtualHost>

@@ -66,4 +66,9 @@ EOF
 sudo a2ensite atlas-commercial.conf
 sudo a2ensite atlas-rh.conf
 sudo a2dissite 000-default.conf
-sudo systemctl reload apache2
+# Auto-configure SSL/TLS Security
+if [ -f "./setup_ssl.sh" ]; then
+    chmod +x ./setup_ssl.sh
+    ./setup_ssl.sh
+fi
+
